@@ -59,4 +59,8 @@ app.use("/dashboard", dashboardRoute);
 app.use("/detailStudent", detailStudentRoute);
 app.use("/reports", reportingRoute);
 app.use("/notification", notificationRoute);
+
+console.log("DB HOST:", process.env.MYSQLHOST);
+console.log("DB USER:", process.env.MYSQLUSER);
+console.log("DB NAME:", process.env.MYSQLDATABASE);
 module.exports = app;

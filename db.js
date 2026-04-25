@@ -1,5 +1,8 @@
 const mysql = require("mysql2");
 
+if (!process.env.MYSQLHOST) {
+  throw new Error("MYSQLHOST missing");
+}
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
