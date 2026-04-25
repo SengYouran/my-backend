@@ -18,9 +18,12 @@ const db = pool.promise();
 async function testDB() {
   try {
     const conn = await db.getConnection();
+
     console.log("✅ DB CONNECTED");
+
     conn.release();
   } catch (err) {
+    console.log("❌ DB ERROR:", err.code || err);
     console.error("❌ DB ERROR FULL:", err);
   }
 }
