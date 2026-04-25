@@ -21,7 +21,7 @@ async function testDB() {
     console.log("✅ DB CONNECTED");
     conn.release();
   } catch (err) {
-    console.log("❌ DB ERROR:", err.code || err);
+    console.error("❌ DB ERROR FULL:", err);
   }
 }
 
