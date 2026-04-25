@@ -1,46 +1,32 @@
-require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-app.get("/", (req, res) => {
-  res.send("Backend is working");
-});
-// =======================
-// 🔥 BODY + COOKIE
-// =======================
-app.use(express.json());
-app.use(cookieParser());
 
-// =======================
-// 🔥 CORS FIX (PRODUCTION SAFE)
-// =======================
+// 🔥 MUST FIRST
 const allowedOrigins = [
   "http://localhost:5173",
   "https://my-frontend-two-theta.vercel.app",
 ];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-};
+}));
 
-app.use(cors(corsOptions));
+app.options("*", cors());
 
-// 🔥 HANDLE PREFLIGHT (IMPORTANT)
-app.options("*", cors(corsOptions));
+// 🔥 THEN middleware
+app.use(express.json());
+app.use(cookieParser());
 
+// test route
+app.get("/", (req, res) => {
+  res.send("Backend is working");
+});
 // =======================
 // static
 // =======================
