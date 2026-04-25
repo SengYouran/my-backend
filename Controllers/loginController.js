@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
     // 1️⃣ check input
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
