@@ -1,31 +1,46 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const app = express();
 
+// =======================
+// BODY + COOKIE
+// =======================
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS FIX (IMPORTANT)
-app.use(cors({
+// =======================
+// CORS FIX (STABLE VERSION)
+// =======================
+const corsOptions = {
   origin: "https://my-frontend-two-theta.vercel.app",
-  credentials: true
-}));
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-app.options("*", cors());
+app.use(cors(corsOptions));
 
-// test
+// IMPORTANT: preflight
+app.options("*", cors(corsOptions));
+
+// =======================
+// TEST ROUTE
+// =======================
 app.get("/", (req, res) => {
   res.send("Backend is working");
 });
+
 // =======================
-// static
+// STATIC FILES
 // =======================
 app.use("/uploads", express.static("uploads"));
 
 // =======================
-// routes
+// ROUTES
 // =======================
 const employeesRoutes = require("./Routes/employeeRoutes");
 const loginrouter = require("./Routes/loginRoutes");
@@ -46,7 +61,7 @@ const reportingRoute = require("./Routes/reportingRoute");
 const notificationRoute = require("./Routes/notificationRoute");
 
 // =======================
-// mount routes
+// MOUNT ROUTES
 // =======================
 app.use("/login", loginrouter);
 app.use("/student", studentRoute);
@@ -67,7 +82,7 @@ app.use("/reports", reportingRoute);
 app.use("/notification", notificationRoute);
 
 // =======================
-// DEBUG
+// DEBUG (IMPORTANT)
 // =======================
 console.log("DB HOST:", process.env.MYSQLHOST);
 console.log("DB USER:", process.env.MYSQLUSER);
