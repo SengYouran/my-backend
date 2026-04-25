@@ -35,8 +35,9 @@ const login = async (req, res) => {
     // 6️⃣ save JWT in HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
+      secure: true,
       sameSite: "none",
-      secure: true, // true when HTTPS
+      path: "/",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
