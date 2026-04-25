@@ -1,27 +1,24 @@
 require("dotenv").config();
 
 const express = require("express");
-
 const cors = require("cors");
-const app = express();
 const cookieParser = require("cookie-parser");
+
+const app = express();
+
+// 🔥 MUST BE FIRST (IMPORTANT)
+app.use(cors({
+  origin: "https://my-frontend-two-theta.vercel.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
+app.options("*", cors());
 
 // middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
-
-// 🔑 CORS config for frontend with credentials
-app.use(
-  cors({
-    origin: "https://my-frontend-two-theta.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-  })
-);
-
-// 🔥 IMPORTANT: handle preflight
-app.options("*", cors());
 
 // routes
 const employeesRoutes = require("./Routes/employeeRoutes");
