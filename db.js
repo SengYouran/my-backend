@@ -5,7 +5,9 @@ const pool = mysql.createPool({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port: Number(process.env.MYSQLPORT || 3306),
+  port: Number(process.env.MYSQLPORT), // 🔥 FIX HERE
+  waitForConnections: true,
+  connectionLimit: 10,
 });
 
 const db = pool.promise();
