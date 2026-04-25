@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+
 // =======================
 // ✅ CORS CONFIG (FIXED)
 // =======================
@@ -18,7 +19,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// ✅ IMPORTANT: handle preflight correctly
+// ✅ IMPORTANT: preflight support
 app.options("*", cors(corsOptions));
 
 // =======================
