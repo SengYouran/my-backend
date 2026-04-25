@@ -14,7 +14,7 @@ app.use("/uploads", express.static("uploads"));
 // 🔑 CORS config for frontend with credentials
 app.use(
   cors({
-    origin: "http://localhost:5173", // <-- your frontend URL
+    origin: "https://my-frontend-two-theta.vercel.app", // <-- your frontend URL
     credentials: true, // allow cookies
   }),
 );
