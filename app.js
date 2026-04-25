@@ -5,7 +5,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-
+app.get("/", (req, res) => {
+  res.send("Backend is working");
+});
 // =======================
 // 🔥 BODY + COOKIE
 // =======================
