@@ -25,7 +25,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         employee_id: user.employee_id,
-        role: user.role, // ✅ FIXED
+        role: user.roles, // ✅ FIXED
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
