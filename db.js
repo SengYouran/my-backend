@@ -5,19 +5,26 @@ const pool = mysql.createPool({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT,
+  port: Number(process.env.MYSQLPORT),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
-// ✅ TEST CONNECTION (PUT HERE)
-pool.getConnection((err) => {
-  if (err) {
-    console.log("❌ DB ERROR:", err);
-  } else {
-    console.log("✅ DB CONNECTED");
-  }
-});
+// ✅ promise wrapper
+const db = pool.promise();
 
-module.exports = pool.promise();
+// ✅ safe test connection
+async function testDB() {
+  try {
+    const conn = await db.getConnection();
+    console.log("✅ DB CONNECTED");
+    conn.release();
+  } catch (err) {
+    console.log("❌ DB ERROR:", err.code || err);
+  }
+}
+
+testDB();
+
+module.exports = db;
