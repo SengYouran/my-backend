@@ -28,7 +28,7 @@ const login = async (req, res) => {
         role: user.role, // ✅ FIXED
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.cookie("token", token, {
@@ -40,12 +40,12 @@ const login = async (req, res) => {
     });
 
     return res.json({ message: "Login success" });
-
   } catch (err) {
     console.log("🔥 LOGIN ERROR FULL:", err);
     return res.status(500).json({
       message: "Server error",
       error: err.message,
+      stack: err.stack,
     });
   }
 };
