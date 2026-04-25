@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
 
     req.user = {
       employee_id: decoded.employee_id,
-      role: decoded.role
+      role: decoded.role,
     };
 
     next();
