@@ -12,6 +12,7 @@ const login = async (req, res) => {
     // 2️⃣ find user
     const inputEmail = email.trim();
     const user = await Login_ERP.getUserByEmail(inputEmail);
+    console.log(user);
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
