@@ -26,23 +26,22 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { employee_id: user.employee_id, role: user.roles },
+      { employee_id: user.employee_id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.setHeader(
       "Set-Cookie",
-      `token=${token}; Path=/; HttpOnly; Secure; SameSite=None`
+      `token=${token}; Path=/; HttpOnly; Secure; SameSite=None`,
     );
 
     return res.json({ message: "Login success" });
-
   } catch (err) {
     console.log("LOGIN ERROR:", err);
     return res.status(500).json({
       message: "Server error",
-      error: err.message
+      error: err.message,
     });
   }
 };
