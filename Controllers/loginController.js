@@ -3,9 +3,6 @@ const Login_ERP = require("../Models/login");
 
 const login = async (req, res) => {
   try {
-    console.log("LOGIN HIT");
-    console.log("BODY:", req.body);
-
     const email = String(req.body.email || "").trim();
     const password = String(req.body.password || "").trim();
 
@@ -15,30 +12,37 @@ const login = async (req, res) => {
 
     const user = await Login_ERP.getUserByEmail(email);
 
-    console.log("USER:", user);
-
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    if (password !== String(user.password).trim()) {
+    const dbPassword = String(user.password || "").trim();
+
+    if (password !== dbPassword) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const token = jwt.sign(
-      { employee_id: user.employee_id, role: user.role },
+      {
+        employee_id: user.employee_id,
+        role: user.role, // ✅ FIXED
+      },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" },
+      { expiresIn: "1d" }
     );
 
-    res.setHeader(
-      "Set-Cookie",
-      `token=${token}; Path=/; HttpOnly; Secure; SameSite=None`,
-    );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
     return res.json({ message: "Login success" });
+
   } catch (err) {
-    console.log("LOGIN ERROR:", err);
+    console.log("🔥 LOGIN ERROR FULL:", err);
     return res.status(500).json({
       message: "Server error",
       error: err.message,
