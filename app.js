@@ -6,22 +6,31 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-// 🔥 1. PUT HERE (VERY TOP - BEFORE EVERYTHING)
-app.use(cors({
+// =======================
+// ✅ CORS CONFIG (FIXED)
+// =======================
+const corsOptions = {
   origin: "https://my-frontend-two-theta.vercel.app",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+};
 
-app.options("*", cors());
+app.use(cors(corsOptions));
 
+// ✅ IMPORTANT: handle preflight correctly
+app.options("*", cors(corsOptions));
+
+// =======================
 // middleware
+// =======================
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
+// =======================
 // routes
+// =======================
 const employeesRoutes = require("./Routes/employeeRoutes");
 const loginrouter = require("./Routes/loginRoutes");
 const teacherRoute = require("./Routes/teacher");
@@ -39,7 +48,10 @@ const dashboardRoute = require("./Routes/dashboardRoute");
 const detailStudentRoute = require("./Routes/detailRoute");
 const reportingRoute = require("./Routes/reportingRoute");
 const notificationRoute = require("./Routes/notificationRoute");
+
+// =======================
 // mount routes
+// =======================
 app.use("/login", loginrouter);
 app.use("/student", studentRoute);
 app.use("/employees", employeesRoutes);
@@ -61,4 +73,5 @@ app.use("/notification", notificationRoute);
 console.log("DB HOST:", process.env.MYSQLHOST);
 console.log("DB USER:", process.env.MYSQLUSER);
 console.log("DB NAME:", process.env.MYSQLDATABASE);
+
 module.exports = app;
