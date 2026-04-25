@@ -6,12 +6,29 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+// =======================
+// 🔥 BODY + COOKIE
+// =======================
+app.use(express.json());
+app.use(cookieParser());
 
 // =======================
-// ✅ CORS CONFIG (FIXED)
+// 🔥 CORS FIX (PRODUCTION SAFE)
 // =======================
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://my-frontend-two-theta.vercel.app",
+];
+
 const corsOptions = {
-  origin: "https://my-frontend-two-theta.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -19,14 +36,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// ✅ IMPORTANT: preflight support
+// 🔥 HANDLE PREFLIGHT (IMPORTANT)
 app.options("*", cors(corsOptions));
 
 // =======================
-// middleware
+// static
 // =======================
-app.use(express.json());
-app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
 // =======================
@@ -71,8 +86,12 @@ app.use("/detailStudent", detailStudentRoute);
 app.use("/reports", reportingRoute);
 app.use("/notification", notificationRoute);
 
+// =======================
+// DEBUG
+// =======================
 console.log("DB HOST:", process.env.MYSQLHOST);
 console.log("DB USER:", process.env.MYSQLUSER);
 console.log("DB NAME:", process.env.MYSQLDATABASE);
 
+// =======================
 module.exports = app;
