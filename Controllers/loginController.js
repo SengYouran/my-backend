@@ -1,69 +1,53 @@
-const jwt = require("jsonwebtoken");
 const Login_ERP = require("../Models/login");
+const jwt = require("jsonwebtoken");
 
-module.exports = async (req, res) => {
-  // =========================
-  // CORS HEADERS (IMPORTANT)
-  // =========================
-  res.setHeader("Access-Control-Allow-Origin", "https://my-frontend-two-theta.vercel.app");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  // handle preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
+const login = async (req, res) => {
   try {
-    const email = String(req.body?.email || "").trim();
-    const password = String(req.body?.password || "").trim();
-
+    const { email, password } = req.body;
+    // 1️⃣ check input
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
     }
 
-    // =========================
-    // FIND USER
-    // =========================
-    const user = await Login_ERP.getUserByEmail(email);
-
+    // 2️⃣ find user
+    const inputEmail = email.trim();
+    const user = await Login_ERP.getUserByEmail(inputEmail);
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
+    const inputPassword = password.trim();
 
-    const dbPassword = String(user.password || "").trim();
-
-    if (password !== dbPassword) {
+    if (inputPassword !== user.password.trim()) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // =========================
-    // CREATE JWT
-    // =========================
-    const token = jwt.sign(
-      {
-        employee_id: user.employee_id,
-        role: user.roles,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    // 4️⃣ create JWT payload
+    const payload = {
+      employee_id: user.employee_id,
+      role: user.roles,
+    };
 
-    // =========================
-    // SET COOKIE (VERCEL SAFE)
-    // =========================
-    res.setHeader(
-      "Set-Cookie",
-      `token=${token}; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=86400`
-    );
-
-    return res.status(200).json({
-      message: "Login success",
+    // 5️⃣ sign JWT
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1d",
     });
 
-  } catch (err) {
-    console.log("LOGIN ERROR:", err);
-    return res.status(500).json({ message: "Server error" });
+    // 6️⃣ save JWT in HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true, // true when HTTPS
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    // 7️⃣ response
+    res.status(200).json({
+      message: "Login success",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
+module.exports = { login };

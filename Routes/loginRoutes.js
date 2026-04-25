@@ -1,40 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const { login } = require("../controllers/loginController");
+const { login } = require("../Controllers/loginController");
+const auth = require("../Middlewares/auth" );
 
-// ======================
-// LOGIN
-// ======================
+// POST /login
 router.post("/", login);
 
-// ======================
-// ME (FIXED)
-// ======================
-router.get("/me", (req, res) => {
-  try {
-    const cookie = req.headers.cookie;
+// GET /login/me
+router.get("/me", auth, (req, res) => {
+  res.json(req.user);
+});
 
-    if (!cookie) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const token = cookie
-      .split(";")
-      .find(c => c.trim().startsWith("token="))
-      ?.split("=")[1];
-
-    if (!token) {
-      return res.status(401).json({ message: "No token" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    return res.json(decoded);
-
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
+// POST /login/logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
 });
 
 module.exports = router;
