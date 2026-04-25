@@ -14,10 +14,14 @@ app.use("/uploads", express.static("uploads"));
 // 🔑 CORS config for frontend with credentials
 app.use(
   cors({
-    origin: "https://my-frontend-two-theta.vercel.app", // <-- your frontend URL
-    credentials: true, // allow cookies
-  }),
+    origin: "https://my-frontend-two-theta.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  })
 );
+
+// 🔥 IMPORTANT: handle preflight
+app.options("*", cors());
 
 // routes
 const employeesRoutes = require("./Routes/employeeRoutes");
