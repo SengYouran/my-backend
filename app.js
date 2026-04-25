@@ -1,0 +1,61 @@
+require("dotenv").config();
+
+const express = require("express");
+
+const app = express();
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+// middleware
+app.use(express.json());
+app.use(cookieParser());
+app.use("/uploads", express.static("uploads"));
+
+// 🔑 CORS config for frontend with credentials
+app.use(
+  cors({
+    origin: "http://localhost:5173", // <-- your frontend URL
+    credentials: true, // allow cookies
+  }),
+);
+
+// routes
+const employeesRoutes = require("./Routes/employeeRoutes");
+const loginrouter = require("./Routes/loginRoutes");
+const teacherRoute = require("./Routes/teacher");
+const classRoute = require("./Routes/classRoute");
+const studentRoute = require("./Routes/studentRoute");
+const bookRoute = require("./Routes/bookRoute");
+const studentPaymentRoute = require("./Routes/studentPaymentRoute");
+const studentAttendanceRoute = require("./Routes/StudnetAttendanceRoute");
+const studentScoreRoute = require("./Routes/studentScoreRoute");
+const teacherBookRoute = require("./Routes/teacherBookRoute");
+const expensesRoute = require("./Routes/expensesRoute");
+const categoryRoute = require("./Routes/categoriesRoute");
+const topStudentRankRoute = require("./Routes/topStudentRankingRoute");
+const dashboardRoute = require("./Routes/dashboardRoute");
+const detailStudentRoute = require("./Routes/detailRoute");
+const reportingRoute = require("./Routes/reportingRoute");
+const notificationRoute = require("./Routes/notificationRoute");
+// mount routes
+app.use("/login", loginrouter);
+app.use("/student", studentRoute);
+app.use("/employees", employeesRoutes);
+app.use("/teacher", teacherRoute);
+app.use("/class", classRoute);
+app.use("/book", bookRoute);
+app.use("/payment", studentPaymentRoute);
+app.use("/attendance", studentAttendanceRoute);
+app.use("/point", studentScoreRoute);
+app.use("/teacherBook", teacherBookRoute);
+app.use("/expenses", expensesRoute);
+app.use("/categories", categoryRoute);
+app.use("/topstudentrank", topStudentRankRoute);
+app.use("/dashboard", dashboardRoute);
+app.use("/detailStudent", detailStudentRoute);
+app.use("/reports", reportingRoute);
+app.use("/notification", notificationRoute);
+// start server
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
