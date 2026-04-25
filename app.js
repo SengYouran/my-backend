@@ -4,26 +4,18 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-// 🔥 MUST FIRST
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://my-frontend-two-theta.vercel.app",
-];
+app.use(express.json());
+app.use(cookieParser());
 
+// ✅ CORS FIX (IMPORTANT)
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: "https://my-frontend-two-theta.vercel.app",
+  credentials: true
 }));
 
 app.options("*", cors());
 
-// 🔥 THEN middleware
-app.use(express.json());
-app.use(cookieParser());
-
-// test route
+// test
 app.get("/", (req, res) => {
   res.send("Backend is working");
 });
