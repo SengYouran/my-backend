@@ -1,24 +1,39 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const { login } = require("../controllers/loginController");
 
+// ======================
+// LOGIN
+// ======================
 router.post("/", login);
 
+// ======================
+// ME (FIXED)
+// ======================
 router.get("/me", (req, res) => {
   try {
-    const token = req.cookies.token;
+    const cookie = req.headers.cookie;
 
-    if (!token) {
+    if (!cookie) {
       return res.status(401).json({ message: "Not authenticated" });
     }
 
-    const jwt = require("jsonwebtoken");
+    const token = cookie
+      .split(";")
+      .find(c => c.trim().startsWith("token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "No token" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    res.json(decoded);
+    return res.json(decoded);
 
   } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 });
 
