@@ -55,7 +55,4 @@ app.use("/dashboard", dashboardRoute);
 app.use("/detailStudent", detailStudentRoute);
 app.use("/reports", reportingRoute);
 app.use("/notification", notificationRoute);
-// start server
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
+module.exports = app;
