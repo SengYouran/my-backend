@@ -28,7 +28,7 @@ router.post("/logout", (req, res) => {
 // REFRESH TOKEN (NEW)
 // =====================
 router.post("/refresh", (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.refreshToken; // 🔥 FIX HERE
 
   if (!token) return res.sendStatus(401);
 
@@ -38,7 +38,7 @@ router.post("/refresh", (req, res) => {
     const newAccessToken = jwt.sign(
       { employee_id: decoded.employee_id },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
     );
 
     return res.json({ accessToken: newAccessToken });
