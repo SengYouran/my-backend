@@ -6,47 +6,47 @@ const login = async (req, res) => {
     const email = String(req.body.email || "").trim();
     const password = String(req.body.password || "").trim();
 
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password required" });
+    }
+
     const user = await Login_ERP.getUserByEmail(email);
 
-    if (!user || password !== String(user.password)) {
+    if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // ACCESS TOKEN
-    const accessToken = jwt.sign(
+    const dbPassword = String(user.password || "").trim();
+
+    if (password !== dbPassword) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign(
       {
         employee_id: user.employee_id,
-        role: user.roles,
+        role: user.roles, // ✅ FIXED
       },
       process.env.JWT_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "1d" },
     );
 
-    // REFRESH TOKEN
-    const refreshToken = jwt.sign(
-      { employee_id: user.employee_id },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    // cookie only for refresh (NOT access token)
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    return res.json({
-      message: "Login success",
-      accessToken,
-      user: {
-        employee_id: user.employee_id,
-        role: user.roles,
-      },
-    });
+    return res.json({ message: "Login success" });
   } catch (err) {
-    return res.status(500).json({ message: "Server error" });
+    console.log("🔥 LOGIN ERROR FULL:", err);
+    return res.status(500).json({
+      message: "Server error",
+      error: err.message,
+      stack: err.stack,
+    });
   }
 };
 

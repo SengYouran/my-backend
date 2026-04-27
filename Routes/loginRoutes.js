@@ -1,50 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const { login } = require("../Controllers/loginController");
-const auth = require("../Middlewares/auth");
+const auth = require("../Middlewares/auth" );
 
-// =====================
-// LOGIN
-// =====================
+// POST /login
 router.post("/", login);
 
-// =====================
-// ME
-// =====================
+// GET /login/me
 router.get("/me", auth, (req, res) => {
   res.json(req.user);
 });
 
-// =====================
-// LOGOUT
-// =====================
+// POST /login/logout
 router.post("/logout", (req, res) => {
-  res.clearCookie("refreshToken"); // FIX
-  return res.json({ message: "Logged out" });
-});
-
-// =====================
-// REFRESH TOKEN (NEW)
-// =====================
-router.post("/refresh", (req, res) => {
-  const token = req.cookies.refreshToken; // 🔥 FIX HERE
-
-  if (!token) return res.sendStatus(401);
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-
-    const newAccessToken = jwt.sign(
-      { employee_id: decoded.employee_id },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" },
-    );
-
-    return res.json({ accessToken: newAccessToken });
-  } catch (err) {
-    return res.sendStatus(403);
-  }
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
 });
 
 module.exports = router;
