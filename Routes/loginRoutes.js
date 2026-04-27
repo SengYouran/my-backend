@@ -28,20 +28,15 @@ router.post("/logout", (req, res) => {
 // REFRESH TOKEN (NEW)
 // =====================
 router.post("/refresh", (req, res) => {
-  const token = req.cookies.refreshToken;
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) return res.sendStatus(401);
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_REFRESH_SECRET
-    );
+    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
     const newAccessToken = jwt.sign(
-      {
-        employee_id: decoded.employee_id,
-      },
+      { employee_id: decoded.employee_id },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
