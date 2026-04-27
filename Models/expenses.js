@@ -32,7 +32,7 @@ const Expenses = {
   },
   getTypeExpense: async () => {
     const sqlTypeExpense = `
-       SELECT * FROM project.expense_type;
+       SELECT * FROM expense_type;
     `;
     const [results] = await db.query(sqlTypeExpense);
     return results;
