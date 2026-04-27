@@ -7,7 +7,6 @@ exports.getReportings = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const typeReport = req.query.typeReport;
-    console.log(typeReport);
     const employee_id = req.query.employee_id;
     const book_id = req.query.book_id;
     const start = req.query.start;
