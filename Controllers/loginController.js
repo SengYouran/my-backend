@@ -25,7 +25,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         employee_id: user.employee_id,
-        role: user.roles, // ✅ FIXED
+        role: user.roles,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
@@ -41,7 +41,7 @@ const login = async (req, res) => {
 
     return res.json({ message: "Login success" });
   } catch (err) {
-    console.log("🔥 LOGIN ERROR FULL:", err);
+    console.log("LOGIN ERROR FULL:", err);
     return res.status(500).json({
       message: "Server error",
       error: err.message,

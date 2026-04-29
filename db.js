@@ -9,7 +9,7 @@ if (
   !process.env.MYSQLPASSWORD ||
   !process.env.MYSQLDATABASE
 ) {
-  console.error("❌ ENV MISSING - check Vercel variables");
+  console.error("ENV MISSING - check Vercel variables");
 }
 
 // =======================
@@ -37,11 +37,11 @@ async function testDB() {
     console.log("USER:", process.env.MYSQLUSER);
 
     const conn = await db.getConnection();
-    console.log("✅ DB CONNECTED");
+    console.log("DB CONNECTED");
 
     conn.release();
   } catch (err) {
-    console.log("❌ DB ERROR:", err.message);
+    console.log("DB ERROR:", err.message);
   }
 }
 
