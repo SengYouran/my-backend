@@ -273,12 +273,12 @@ WHERE s.student_id = ?;
       data.first_name,
       data.last_name,
       data.gender,
-      data.dob,
+      data.dob.split("T")[0],
       data.telephone,
       data.address,
       data.description,
       data.is_active ?? 1,
-      student_id
+      student_id,
     ];
 
     const [results] = await conn.query(sql, values);
