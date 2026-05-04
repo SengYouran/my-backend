@@ -115,8 +115,6 @@ exports.insertStudent = async (req, res) => {
 exports.updateStudent = async (req, res) => {
   const { id } = req.params;
   let connection = await db.getConnection();
-  console.log("UPDATE PARAMS:", req.params);
-  console.log("UPDATE BODY:", req.body);
 
   try {
     await connection.beginTransaction();
