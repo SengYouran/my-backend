@@ -115,6 +115,8 @@ exports.insertStudent = async (req, res) => {
 exports.updateStudent = async (req, res) => {
   const { id } = req.params;
   let connection = await db.getConnection();
+  console.log("UPDATE PARAMS:", req.params);
+  console.log("UPDATE BODY:", req.body);
 
   try {
     await connection.beginTransaction();
@@ -135,7 +137,7 @@ exports.updateStudent = async (req, res) => {
       createdAt,
       shift,
       start_time,
-      end_time
+      end_time,
     } = req.body;
 
     await Student.updateStudent(connection, id, {
@@ -165,7 +167,6 @@ exports.updateStudent = async (req, res) => {
     res.status(200).json({
       message: "Update successful",
     });
-
   } catch (err) {
     await connection.rollback();
     res.status(500).json({
