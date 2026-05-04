@@ -153,7 +153,6 @@ exports.updateStudent = async (req, res) => {
       address,
       description,
       is_active: is_active ?? 1,
-      createdAt,
     });
 
     await Shift.updateShift(connection, id, {

@@ -18,11 +18,10 @@ const Shift = {
   },
   updateShift: async (conn, student_id, data) => {
     const sql = `
-    UPDATE shift_tbl SET student_id = ?, shift = ?, start_time = ?, end_time = ?
+    UPDATE shift_tbl SET shift = ?, start_time = ?, end_time = ?
     WHERE student_id = ? 
     `;
     const values = [
-      student_id,
       data.shift,
       data.start_time,
       data.end_time,
