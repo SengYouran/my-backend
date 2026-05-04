@@ -86,7 +86,15 @@ const Student = {
   },
   getOneStudent: async (student_id) => {
     const sqlOneStudent = `
-      select * from student_tbl where student_id = ?
+      SELECT 
+  s.*, 
+  sh.shift,
+  sh.start_time,
+  sh.end_time 
+FROM student_tbl s
+LEFT JOIN shift_tbl sh 
+  ON s.student_id = sh.student_id
+WHERE s.student_id = ?;
     `;
     const [results] = await db.query(sqlOneStudent, [student_id]);
     const oneStudent = results[0];
