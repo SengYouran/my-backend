@@ -22,10 +22,11 @@ const Shift = {
     WHERE student_id = ? 
     `;
     const values = [
-      data.student_id,
+      student_id,
       data.shift,
       data.start_time,
       data.end_time,
+      student_id,
     ];
     const [results] = await conn.query(sql, values);
     return [results.affectedRows > 0];

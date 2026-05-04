@@ -266,7 +266,6 @@ WHERE s.student_id = ?;
             is_active = ? WHERE student_id = ?
         `;
     const values = [
-      data.student_id,
       data.class_id,
       data.employee_id,
       data.book_id,
@@ -279,6 +278,7 @@ WHERE s.student_id = ?;
       data.address,
       data.description,
       data.is_active ?? 1,
+      student_id
     ];
 
     const [results] = await conn.query(sql, values);

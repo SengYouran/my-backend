@@ -115,8 +115,10 @@ exports.insertStudent = async (req, res) => {
 exports.updateStudent = async (req, res) => {
   const { id } = req.params;
   let connection = await db.getConnection();
+
   try {
     await connection.beginTransaction();
+
     const {
       class_id,
       employee_id,
@@ -131,9 +133,12 @@ exports.updateStudent = async (req, res) => {
       description,
       is_active,
       createdAt,
+      shift,
+      start_time,
+      end_time
     } = req.body;
-    // update student
-    const studentResult = await Student.insert(connection, id, {
+
+    await Student.updateStudent(connection, id, {
       class_id,
       employee_id,
       book_id,
@@ -148,15 +153,23 @@ exports.updateStudent = async (req, res) => {
       is_active: is_active ?? 1,
       createdAt,
     });
+
     await Shift.updateShift(connection, id, {
       shift,
       start_time,
       end_time,
     });
+
+    await connection.commit();
+
+    res.status(200).json({
+      message: "Update successful",
+    });
+
   } catch (err) {
     await connection.rollback();
     res.status(500).json({
-      message: err.message || "Update transaction failed ❌",
+      message: err.message || "Update transaction failed",
     });
   } finally {
     connection.release();
