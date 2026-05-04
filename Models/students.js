@@ -89,7 +89,8 @@ const Student = {
       select * from student_tbl where student_id = ?
     `;
     const [results] = await db.query(sqlOneStudent, [student_id]);
-    return results
+    const oneStudent = results[0];
+    return oneStudent;
   },
   getStudentUderTeacher: async (employee_id, page = 1, limit = 10) => {
     const offset = (page - 1) * limit;
