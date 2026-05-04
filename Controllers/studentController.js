@@ -44,6 +44,16 @@ exports.getSearchSutdentsAt = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.getOneStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await Student.getOneStudent(id);
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.sqlMessage || err.message });
+  }
+};
 exports.insertStudent = async (req, res) => {
   const connection = await db.getConnection();
   try {

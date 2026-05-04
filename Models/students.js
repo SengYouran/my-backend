@@ -84,7 +84,13 @@ const Student = {
       totalStudentUnderTeacher: totalStudentTeacher[0],
     };
   },
-  //write backEnd for search student
+  getOneStudent: async (student_id) => {
+    const sqlOneStudent = `
+      select * from student_tbl where student_id = ?
+    `;
+    const [results] = await db.query(sqlOneStudent, [student_id]);
+    return results
+  },
   getStudentUderTeacher: async (employee_id, page = 1, limit = 10) => {
     const offset = (page - 1) * limit;
     const sql = `
