@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config(); //load .env file use for DB config, JWT scret, API keys
 
 const express = require("express");
 const cors = require("cors");
@@ -6,17 +6,13 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-// =======================
 // BODY + COOKIE
-// =======================
 app.use(express.json());
 app.use(cookieParser());
 
-// =======================
 // CORS FIX (STABLE VERSION)
-// =======================
 const corsOptions = {
-  origin: "https://my-frontend-two-theta.vercel.app",
+  origin: ["https://my-frontend-two-theta.vercel.app", "http://localhost:5173"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -27,21 +23,15 @@ app.use(cors(corsOptions));
 // IMPORTANT: preflight
 app.options("*", cors(corsOptions));
 
-// =======================
-// TEST ROUTE
-// =======================
+// TEST ROUTE, if backend working
 app.get("/", (req, res) => {
   res.send("Backend is working");
 });
 
-// =======================
 // STATIC FILES
-// =======================
 app.use("/uploads", express.static("uploads"));
 
-// =======================
 // ROUTES
-// =======================
 const employeesRoutes = require("./Routes/employeeRoutes");
 const loginrouter = require("./Routes/loginRoutes");
 const teacherRoute = require("./Routes/teacher");
@@ -60,9 +50,7 @@ const detailStudentRoute = require("./Routes/detailRoute");
 const reportingRoute = require("./Routes/reportingRoute");
 const notificationRoute = require("./Routes/notificationRoute");
 
-// =======================
 // MOUNT ROUTES
-// =======================
 app.use("/login", loginrouter);
 app.use("/student", studentRoute);
 app.use("/employees", employeesRoutes);
@@ -81,12 +69,9 @@ app.use("/detailStudent", detailStudentRoute);
 app.use("/reports", reportingRoute);
 app.use("/notification", notificationRoute);
 
-// =======================
 // DEBUG (IMPORTANT)
-// =======================
-console.log("DB HOST:", process.env.MYSQLHOST);
-console.log("DB USER:", process.env.MYSQLUSER);
-console.log("DB NAME:", process.env.MYSQLDATABASE);
+//console.log("DB HOST:", process.env.MYSQLHOST);
+//console.log("DB USER:", process.env.MYSQLUSER);
+//console.log("DB NAME:", process.env.MYSQLDATABASE);
 
-// =======================
 module.exports = app;
