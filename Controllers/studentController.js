@@ -2,6 +2,7 @@ const Student = require("../Models/students");
 const StudentPayment = require("../Models/paymentStudent");
 const db = require("../db");
 const Shift = require("../Models/shift");
+const { end } = require("pdfkit");
 exports.getInforStudnet = async (req, res) => {
   try {
     const { role, employee_id } = req.user;
@@ -107,6 +108,56 @@ exports.insertStudent = async (req, res) => {
     await connection.rollback();
     console.error("INSERT ERROR:", err);
     res.status(500).json({ message: err.sqlMessage || err.message });
+  } finally {
+    connection.release();
+  }
+};
+exports.updateStudent = async (req, res) => {
+  const { id } = req.params;
+  let connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+    const {
+      class_id,
+      employee_id,
+      book_id,
+      id_card,
+      first_name,
+      last_name,
+      gender,
+      dob,
+      telephone,
+      address,
+      description,
+      is_active,
+      createdAt,
+    } = req.body;
+    // update student
+    const studentResult = await Student.insert(connection, id, {
+      class_id,
+      employee_id,
+      book_id,
+      id_card,
+      first_name,
+      last_name,
+      gender,
+      dob,
+      telephone,
+      address,
+      description,
+      is_active: is_active ?? 1,
+      createdAt,
+    });
+    await Shift.updateShift(connection, id, {
+      shift,
+      start_time,
+      end_time,
+    });
+  } catch (err) {
+    await connection.rollback();
+    res.status(500).json({
+      message: err.message || "Update transaction failed ❌",
+    });
   } finally {
     connection.release();
   }

@@ -258,6 +258,32 @@ WHERE s.student_id = ?;
       ...data,
     };
   },
+  updateStudent: async (conn, student_id, data) => {
+    const sql = `
+            UPDATE student_tbl
+            SET class_id = ?, employee_id = ?, book_id = ?, id_card = ?, first_name = ?, 
+            last_name = ?, gender = ?, dob = ?, telephone = ?, address = ?, description = ?,
+            is_active = ? WHERE student_id = ?
+        `;
+    const values = [
+      data.student_id,
+      data.class_id,
+      data.employee_id,
+      data.book_id,
+      data.id_card,
+      data.first_name,
+      data.last_name,
+      data.gender,
+      data.dob,
+      data.telephone,
+      data.address,
+      data.description,
+      data.is_active ?? 1,
+    ];
+
+    const [results] = await conn.query(sql, values);
+    return [results.affectedRows > 0];
+  },
   deleteStudent: async (student_id) => {
     const sql = `
       UPDATE student_tbl SET is_active = 0 WHERE student_id = ?

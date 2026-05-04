@@ -173,13 +173,13 @@ exports.updateEmployees = async (req, res) => {
       experience,
     });
 
-    // ✅ COMMIT
+    // COMMIT
     await conn.commit();
-    res.json({ message: "Update successful ✅" });
+    res.json({ message: "Update successful" });
   } catch (err) {
     if (conn) await conn.rollback();
     res.status(500).json({
-      message: err.message || "Update transaction failed ❌",
+      message: err.message || "Update transaction failed",
     });
   } finally {
     if (conn) conn.release();
@@ -195,30 +195,30 @@ exports.deleteEmployee = async (req, res) => {
     conn = await db.getConnection();
     await conn.beginTransaction();
 
-    // 1️⃣ Soft delete employee
+    // Soft delete employee
     await conn.query(`UPDATE employee_tbl SET is_active = 0 WHERE id = ?`, [
       id,
     ]);
 
-    // 2️⃣ Soft delete useraccount
+    // Soft delete useraccount
     await conn.query(
       `UPDATE useraccount SET is_active = 0 WHERE employee_id = ?`,
       [id],
     );
 
-    // 3️⃣ Soft delete salary
+    //  Soft delete salary
     await conn.query(
       `UPDATE salary_tbl SET is_active = 0 WHERE employee_id = ?`,
       [id],
     );
 
-    // ✅ COMMIT
+    // COMMIT
     await conn.commit();
-    res.json({ message: "Employee deleted successfully ✅" });
+    res.json({ message: "Employee deleted successfully" });
   } catch (err) {
     if (conn) await conn.rollback();
     res.status(500).json({
-      message: err.message || "Delete transaction failed ❌",
+      message: err.message || "Delete transaction failed",
     });
   } finally {
     if (conn) conn.release();

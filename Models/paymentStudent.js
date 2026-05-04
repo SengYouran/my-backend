@@ -2,7 +2,7 @@ const db = require("../db");
 const paginate = require("../Utility/paginate");
 const StudentPayment = {
   getStudentPaymentPaid: async (type, page = 1, limit = 10) => {
-    // 1️⃣ Build condition
+    // Build condition
     let condition = "1=1";
     if (type === "Paid")
       condition = "sp.pay_status = 'Paid' AND sp.period_end >= CURDATE()";
@@ -15,7 +15,7 @@ const StudentPayment = {
     if (type === "Yearly")
       condition = "sp.pay_type = 'Yearly' AND sp.period_end >= CURDATE()";
 
-    // 2️⃣ Pagination queries
+    // Pagination queries
     const dataQuery = `
     SELECT 
       stu.student_id, stu.first_name, stu.last_name, stu.telephone, 
@@ -33,7 +33,7 @@ const StudentPayment = {
     WHERE ${condition}
   `;
 
-    // 4️⃣ Run queries in parallel
+    // Run queries in parallel
     const [totalPagination] = await Promise.all([
       paginate({
         db,
@@ -45,7 +45,7 @@ const StudentPayment = {
       }),
     ]);
 
-    // 5️⃣ Return combined object
+    //  Return combined object
     return {
       results: totalPagination.results,
       pagination: totalPagination.pagination,

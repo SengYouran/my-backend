@@ -1,7 +1,7 @@
 const db = require("../db");
 
 const userAccount = {
-  // ✅ INSERT user account
+  // INSERT user account
   insert: async (conn,data) => {
     const roles = data.roles || "employee";
     const is_active = data.is_active === undefined ? 1 : data.is_active;
@@ -35,7 +35,7 @@ const userAccount = {
     };
   },
 
-  // ✅ UPDATE by employee_id (for transaction)
+  //  UPDATE by employee_id (for transaction)
   updateByEmployeeId: async (conn, employee_id, data) => {
     const sql = `
       UPDATE useraccount

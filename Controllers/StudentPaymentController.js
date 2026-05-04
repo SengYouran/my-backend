@@ -117,7 +117,6 @@ exports.updatePayment = async (req, res) => {
       transport_fee,
       is_active,
     } = req.body;
-    console.log(amount)
     await StudentPayment.updatePaymentStudentModel(connection, id, {
       student_id,
       amount,

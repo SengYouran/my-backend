@@ -16,5 +16,19 @@ const Shift = {
       ...data,
     };
   },
+  updateShift: async (conn, student_id, data) => {
+    const sql = `
+    UPDATE shift_tbl SET student_id = ?, shift = ?, start_time = ?, end_time = ?
+    WHERE student_id = ? 
+    `;
+    const values = [
+      data.student_id,
+      data.shift,
+      data.start_time,
+      data.end_time,
+    ];
+    const [results] = await conn.query(sql, values);
+    return [results.affectedRows > 0];
+  },
 };
 module.exports = Shift;
