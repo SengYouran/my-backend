@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 // CORS FIX (STABLE VERSION)
 const corsOptions = {
-  origin: ["https://my-frontend-two-theta.vercel.app", "http://localhost:5173"],
+  origin: ["http://localhost:5173", "https://my-frontend-two-theta.vercel.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],

@@ -5,7 +5,8 @@ const login = async (req, res) => {
   try {
     const email = String(req.body.email || "").trim();
     const password = String(req.body.password || "").trim();
-
+    console.log(email);
+    console.log(password);
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
     }
@@ -17,7 +18,6 @@ const login = async (req, res) => {
     }
 
     const dbPassword = String(user.password || "").trim();
-
     if (password !== dbPassword) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -31,10 +31,12 @@ const login = async (req, res) => {
       { expiresIn: "1d" },
     );
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: isProduction, // false បើនៅលើ local
+      sameSite: isProduction ? "none" : "lax",
       path: "/",
       maxAge: 24 * 60 * 60 * 1000,
     });
